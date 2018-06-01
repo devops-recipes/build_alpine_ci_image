@@ -28,8 +28,9 @@ jobs:
       - TASK:
           name: build_image
           runtime:
-            env:
-              - RES_OUT_IMG: "build_alpine_ci_img_dh"
+            options:
+              env:
+                - RES_OUT_IMG: "build_alpine_ci_img_dh"
           script:
             # Extract image information and Docker registry credentials from resources using shipctl utility
             # Detailed shipctl guide is at http://docs.shippable.com/platform/tutorial/workflow/using-shipctl/
@@ -58,7 +59,8 @@ jobs:
       - TASK:
           name: set_env
           runtime:
-            container: false
+            options:
+              container: false
           script:
             - ALP_IMG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "sourceName")
             - ALP_IMG_TAG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "versionName")
@@ -82,8 +84,9 @@ jobs:
       - TASK:
           name: build_image
           runtime:
-            env:
-              - RES_OUT_IMG: "build_docker_ci_img_dh"
+            options:
+              env:
+                - RES_OUT_IMG: "build_docker_ci_img_dh"
           script:
             # Extract image information and Docker registry credentials from resources using shipctl utility
             # Detailed shipctl guide is at http://docs.shippable.com/platform/tutorial/workflow/using-shipctl/
