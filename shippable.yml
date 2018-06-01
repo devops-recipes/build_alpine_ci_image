@@ -48,7 +48,6 @@ jobs:
         # Update OUT resource to create a new version that will trigger rest of the workflow
         - shipctl put_resource_state_multi "$RES_OUT_IMG" "versionName=$BUILD_NUMBER"
     flags:
-      # Use flags to filter SPOG views
       - alpine_ci_img
       - ci
 
@@ -74,6 +73,7 @@ jobs:
               imageTag: $ALP_IMG_TAG
           script:
             - node -v
+    flags:
       - alpine_ci_img
       - ci
 
