@@ -1,0 +1,59 @@
+resources:
+  - name: build_alpine_ci_repo
+    type: gitRepo
+    integration: drship_github  #replace with your Github integration, if needed
+    pointer:
+      sourceName: "devops-recipes/build_alpine_ci_image"  #org name/repository name
+      branch: master
+
+  - name: build_alpine_ci_img_dh
+    type: image
+    integration: drship_dockerhub # replace with your integration name
+    versionTemplate:
+      sourceName: "devopsrecipes/build_alpine_ci" # replace with your Hub URL
+      versionName: latest
+
+jobs:
+  - name: build_alpine_img
+    type: runSh
+    steps:
+      - IN: build_alpine_ci_repo
+      - TASK:
+          name: build_image
+          script:
+            - pushd $(shipctl get_resource_state "build_alpine_ci_repo")
+            # Extract image information and Docker registry credentials from resources using shipctl utility
+            # Detailed shipctl guide is at http://docs.shippable.com/platform/tutorial/workflow/using-shipctl/
+            - export IMG_NAME=$(shipctl get_resource_version_key build_alpine_ci_img_dh "sourceName")
+            - export DH_USR_NAME=$(shipctl get_integration_resource_field build_alpine_ci_img_dh "userName")
+            - export DH_PASS=$(shipctl get_integration_resource_field build_alpine_ci_img_dh "password")
+            - export DH_URL=$(shipctl get_integration_resource_field build_alpine_ci_img_dh "url")
+            # Docker commands to build and push to registry
+            - sudo docker build -t=$IMG_NAME:$BUILD_NUMBER --pull .
+            - sudo docker login -u $DH_USR_NAME -p $DH_PASS
+            - sudo docker push $IMG_NAME:$BUILD_NUMBER
+      - OUT: build_alpine_ci_img_dh
+    on_success:
+      script:
+        # Update OUT resource to create a new version that will trigger rest of the workflow
+        - shipctl put_resource_state_multi build_alpine_ci_img "versionName=$BUILD_NUMBER"
+    flags:
+      # Use flags to filter SPOG views
+      - alpine_ci_img
+      - ci
+
+  - name: test_alpine_img
+    type: runSh
+    steps:
+      - IN: build_alpine_ci_img_dh
+      - TASK:
+          script:
+            - export IMG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "sourceName")
+            - export IMG_TAG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "versionName")
+      - TASK:
+          runtime:
+            options:
+              imageName: $IMG
+              imageTag: $IMG_TAG
+          script:
+            - node -v
