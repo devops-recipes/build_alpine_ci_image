@@ -15,6 +15,7 @@ export PACKAGES="\
     nodejs \
 "
 
+apk update
 
 echo "================ installing packages ======================="
 apk add --no-cache $PACKAGES
