@@ -58,8 +58,7 @@ jobs:
       - TASK:
           name: set_env
           runtime:
-            options:
-              container: false
+            container: false
           script:
             - ALP_IMG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "sourceName")
             - ALP_IMG_TAG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "versionName")
