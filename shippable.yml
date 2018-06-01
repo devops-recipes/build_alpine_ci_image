@@ -47,13 +47,17 @@ jobs:
     steps:
       - IN: build_alpine_ci_img_dh
       - TASK:
+          runtime:
+            container: false
           script:
-            - export IMG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "sourceName")
-            - export IMG_TAG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "versionName")
+            - ALP_IMG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "sourceName")
+            - ALP_IMG_TAG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "versionName")
+            - echo "IMG=$IMG" >> /etc/environment
+            - echo "IMG=$IMG" >> /etc/environment
       - TASK:
           runtime:
             options:
-              imageName: $IMG
-              imageTag: $IMG_TAG
+              imageName: $ALP_IMG
+              imageTag: $ALP_IMG_TAG
           script:
             - node -v
