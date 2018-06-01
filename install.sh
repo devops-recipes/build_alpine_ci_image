@@ -29,5 +29,8 @@ easy_install pip
 pip install --upgrade pip
 if [[ ! -e /usr/bin/pip ]]; then ln -sf /usr/bin/pip2.7 /usr/bin/pip; fi
 
+echo "================ install python packages ======================="
+pip install requests
+
 echo "================ test ssh ======================="
 eval `ssh-agent -s`
