@@ -28,17 +28,16 @@ jobs:
       - TASK:
           name: build_image
           runtime:
-              env:
-                - RES_OUT_IMG: "build_alpine_ci_img_dh"
+            env:
+              - RES_OUT_IMG: "build_alpine_ci_img_dh"
           script:
-            - pushd $(shipctl get_resource_state "build_alpine_ci_repo")
             # Extract image information and Docker registry credentials from resources using shipctl utility
             # Detailed shipctl guide is at http://docs.shippable.com/platform/tutorial/workflow/using-shipctl/
             - IMG_NAME=$(shipctl get_resource_version_key "$RES_OUT_IMG" "sourceName")
             - DH_USR_NAME=$(shipctl get_integration_resource_field "$RES_OUT_IMG" "userName")
             - DH_PASS=$(shipctl get_integration_resource_field "$RES_OUT_IMG" "password")
             - DH_URL=$(shipctl get_integration_resource_field "$RES_OUT_IMG" "url")
-            # Docker commands to build and push to registry
+            - pushd $(shipctl get_resource_state "build_alpine_ci_repo")
             - docker build -t=$IMG_NAME:$BUILD_NUMBER -f Dockerfile.alpine37 --pull .
             - docker login -u $DH_USR_NAME -p $DH_PASS
             - docker push $IMG_NAME:$BUILD_NUMBER
@@ -83,17 +82,16 @@ jobs:
       - TASK:
           name: build_image
           runtime:
-              env:
-                - RES_OUT_IMG: "build_docker_ci_img_dh"
+            env:
+              - RES_OUT_IMG: "build_docker_ci_img_dh"
           script:
-            - pushd $(shipctl get_resource_state "build_alpine_ci_repo")
             # Extract image information and Docker registry credentials from resources using shipctl utility
             # Detailed shipctl guide is at http://docs.shippable.com/platform/tutorial/workflow/using-shipctl/
             - IMG_NAME=$(shipctl get_resource_version_key "$RES_OUT_IMG" "sourceName")
             - DH_USR_NAME=$(shipctl get_integration_resource_field "$RES_OUT_IMG" "userName")
             - DH_PASS=$(shipctl get_integration_resource_field "$RES_OUT_IMG" "password")
             - DH_URL=$(shipctl get_integration_resource_field "$RES_OUT_IMG" "url")
-            # Docker commands to build and push to registry
+            - pushd $(shipctl get_resource_state "build_alpine_ci_repo")
             - docker build -t=$IMG_NAME:$BUILD_NUMBER -f Dockerfile.docker --pull .
             - docker login -u $DH_USR_NAME -p $DH_PASS
             - docker push $IMG_NAME:$BUILD_NUMBER
