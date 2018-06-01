@@ -60,10 +60,24 @@ jobs:
           runtime:
             container: false
           script:
+# this is very hacky as its hardcoding the boot script location.
+# we need to create a shipctl to abstract this out
+# if you dont want to do this, hard code the imageName and tag, rather than making
+# it dynamic
+# Basically, this is getting the boot script of next task, then injecting the
+# env vars after the shebang line
             - ALP_IMG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "sourceName")
             - ALP_IMG_TAG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "versionName")
             - echo "ALP_IMG=$ALP_IMG" >> /etc/environment
             - echo "ALP_IMG_TAG=$ALP_IMG_TAG" >> /etc/environment
+            - NEXT_BOOT_SCRIPT_PATH="$BUILD_DIR/scripts/yml_boot_1.sh"
+            - NEXT_BOOT_SCRIPT_WITHOUT_SHEBANG=$(cat $NEXT_BOOT_SCRIPT_PATH | tail -n +2)
+            - |
+              echo "#!/bin/bash -e
+              export ALP_IMG=$ALP_IMG
+              export ALP_IMG_TAG=$ALP_IMG_TAG
+              $NEXT_BOOT_SCRIPT_WITHOUT_SHEBANG
+              " > $NEXT_BOOT_SCRIPT_PATH
       - TASK:
           name: test_image
           runtime:
