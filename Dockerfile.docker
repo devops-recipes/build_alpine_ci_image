@@ -1,0 +1,6 @@
+FROM docker:latest
+
+ADD . /tmp
+
+RUN apk add --no-cache bash
+RUN /tmp/install.sh
