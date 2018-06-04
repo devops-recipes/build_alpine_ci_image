@@ -27,6 +27,8 @@ wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://raw.githubusercontent.com/sger
 wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.27-r0/glibc-2.27-r0.apk
 apk add glibc-2.27-r0.apk
 
+apk add glibc-bin-2.27-r0.apk glibc-i18n-2.27-r0.apk
+/usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8
 
 echo "================ make some useful symlinks that are expected to exist ======================="
 if [[ ! -e /usr/bin/python ]];        then ln -sf /usr/bin/python2.7 /usr/bin/python; fi
@@ -37,9 +39,6 @@ echo "================ install and upgrade pip ======================="
 easy_install pip
 pip install --upgrade pip
 if [[ ! -e /usr/bin/pip ]]; then ln -sf /usr/bin/pip2.7 /usr/bin/pip; fi
-
-echo "================ install python packages ======================="
-pip install requests
 
 echo "================ test ssh ======================="
 eval `ssh-agent -s`
