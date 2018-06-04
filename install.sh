@@ -13,6 +13,7 @@ export PACKAGES="\
     python2-dev \
     py-pip \
     nodejs \
+    wget \
 "
 
 apk update
@@ -22,7 +23,6 @@ apk add --no-cache $PACKAGES
 
 
 echo "================ installing glibc ======================="
-apk --no-cache add ca-certificates wget
 wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://raw.githubusercontent.com/sgerrand/alpine-pkg-glibc/master/sgerrand.rsa.pub
 wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.27-r0/glibc-2.27-r0.apk
 wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.27-r0/glibc-bin-2.27-r0.apk
