@@ -85,7 +85,7 @@ jobs:
               imageName: $ALP_IMG
               imageTag: $ALP_IMG_TAG
           script:
-            - node -v
+            - python -V
     flags:
       - alpine_ci_img
       - ci
