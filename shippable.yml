@@ -68,8 +68,6 @@ jobs:
 # env vars after the shebang line
             - ALP_IMG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "sourceName")
             - ALP_IMG_TAG=$(shipctl get_resource_version_key build_alpine_ci_img_dh "versionName")
-            - echo "ALP_IMG=$ALP_IMG" >> /etc/environment
-            - echo "ALP_IMG_TAG=$ALP_IMG_TAG" >> /etc/environment
             - NEXT_BOOT_SCRIPT_PATH="$BUILD_DIR/scripts/yml_boot_1.sh"
             - NEXT_BOOT_SCRIPT_WITHOUT_SHEBANG=$(cat $NEXT_BOOT_SCRIPT_PATH | tail -n +2)
             - |
